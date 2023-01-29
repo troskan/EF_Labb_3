@@ -17,51 +17,193 @@ namespace EF_Labb_3
         {
             MainMenu();
         }
-       
-        static void GetAllStudents2(string orderBy, string descOrAsc)
+        static void MainMenu()
         {
-            var sortBy = DB.Students.OrderBy(s => s.Fname);
+            string[] menuOptions = { "\t1. Get all students", "\t2. Get all students in a class", "\t3. Add new staff", "\t4. Exit" };
+            int selectedOption = 0;
 
-            //Depending on the method parameter the method will sort the results different.
-            switch (orderBy)
+            while (true)
             {
-                case "fname":
-                    sortBy = DB.Students.OrderBy(s => s.Fname);
-                    break;
-                case "lname":
-                    sortBy = DB.Students.OrderBy(s => s.Lname);
-                    
-                    break;
-                default:
-                    break;
-            }
+                // Visa menyn
+                Console.Clear();
+                for (int i = 0; i < menuOptions.Length; i++)
+                {
+                    if (i == selectedOption)
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkRed;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.WriteLine(menuOptions[i]);
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.WriteLine(menuOptions[i]);
+                    }
+                }
 
-            if(descOrAsc == "desc") 
+
+                // Hantera input från användaren
+                var key = Console.ReadKey(true).Key;
+                if (key == ConsoleKey.UpArrow && selectedOption > 0)
+                {
+                    selectedOption--;
+                }
+                else if (key == ConsoleKey.DownArrow && selectedOption < menuOptions.Length - 1)
+                {
+                    selectedOption++;
+                }
+                else if (key == ConsoleKey.Enter)
+                {
+                    switch (selectedOption)
+                    {
+                        case 0:
+                            GetAllStudentsMenu();
+                            Console.ReadKey();
+                            break;
+
+                        case 1:
+                            GetAllClassesMenu();
+                            Console.ReadKey();
+                            break;
+
+                        case 2:
+                            AddStaffMenu();
+                            Console.ReadKey();
+                            break;
+
+                        case -1:
+                            Console.WriteLine("TEST 3");
+                            Console.ReadKey();
+                            break;
+                        default:
+                            Environment.Exit(0);
+                            break;
+                    }
+
+                }
+            }
+        }
+        static void GetAllStudentsMenu()
+        {
+            string[] menuOptions = { "\t1. Sort by first name.", "\t2. Sort by last name.","\t3. Sort by first name + descending order."
+                    ,"\t4. Sort by last name + descending order.","\t5. Exit." };
+            int selectedOption = 0;
+
+            while (true)
             {
-                    sortBy = sortBy.OrderByDescending(s => s.Fname).ThenByDescending(s => s.Lname);
-            }
+                // Visa menyn
+                Console.Clear();
+                for (int i = 0; i < menuOptions.Length; i++)
+                {
+                    if (i == selectedOption)
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkRed;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.WriteLine(menuOptions[i]);
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.WriteLine(menuOptions[i]);
+                    }
+                }
 
+                // Hantera input från användaren
+                var key = Console.ReadKey(true).Key;
+                if (key == ConsoleKey.UpArrow && selectedOption > 0)
+                {
+                    selectedOption--;
+                }
+                else if (key == ConsoleKey.DownArrow && selectedOption < menuOptions.Length - 1)
+                {
+                    selectedOption++;
+                }
+                else if (key == ConsoleKey.Enter)
+                {
+                    switch (selectedOption)
+                    {
+                        case 0:
+                            DisplayStudents(SortByFname());
+                            PressKeyContinue();
+                            break;
+
+                        case 1:
+                            DisplayStudents(SortByLname());
+                            PressKeyContinue();
+                            break;
+
+                        case 2:
+                            DisplayStudents(SortByFnameDesc());
+                            PressKeyContinue();
+                            break;
+
+                        case 3:
+                            DisplayStudents(SortByLnameDesc());
+                            PressKeyContinue();
+                            break;
+
+                        default:
+                            MainMenu();
+                            break;
+                    }
+
+                }
+            }
         }
-        static List<Student> SortByFname()
+        static void AddStaffMenu()
         {
-            var sortBy = DB.Students.OrderBy(s => s.Fname).ToList();
-            return sortBy;
+            string[] menuOptions = { $"\t1. Add new Staff employee.", $"\t2. Back to Main Menu." };
+
+            int selectedOption = 0;
+
+            while (true)
+            {
+                // Visa menyn
+                Console.Clear();
+                for (int i = 0; i < menuOptions.Length; i++)
+                {
+                    if (i == selectedOption)
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkRed;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.WriteLine(menuOptions[i]);
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.WriteLine(menuOptions[i]);
+                    }
+                }
+
+                // Hantera input från användaren
+                var key = Console.ReadKey(true).Key;
+                if (key == ConsoleKey.UpArrow && selectedOption > 0)
+                {
+                    selectedOption--;
+                }
+                else if (key == ConsoleKey.DownArrow && selectedOption < menuOptions.Length - 1)
+                {
+                    selectedOption++;
+                }
+                else if (key == ConsoleKey.Enter)
+                {
+                    switch (selectedOption)
+                    {
+                        case 0:
+                            RequestNewStaff();
+                            PressKeyContinue();
+                            MainMenu();
+                            break;
+
+                        default:
+                            MainMenu();
+                            break;
+                    }
+
+                }
+            }
         }
-        static List<Student> SortByLname()
-        {
-            var sortBy = DB.Students.OrderBy(s => s.Lname).ToList();
-            return sortBy;
-        }
-        static List<Student> SortByFnameDesc()
-        {
-            var sortBy = DB.Students.OrderByDescending(s => s.Fname).ToList();
-            return sortBy;
-        }
-        static List<Student> SortByLnameDesc()
-        {
-            var sortBy = DB.Students.OrderByDescending(s => s.Lname).ToList();
-            return sortBy;
-        }
+
         static void AddStaff(string fName, string lName, int ssn)
         {
             staff s = new staff();
@@ -158,162 +300,7 @@ namespace EF_Labb_3
 
 
         }
-
-        static void PressKeyContinue()
-        {
-            Console.WriteLine();
-            Console.BackgroundColor = ConsoleColor.DarkGray;
-            Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine("Press any key to continue..");
-            Console.ResetColor();
-            Console.ReadKey();
-        }
-        static void TextRed(string yourText)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write(yourText);
-            Console.ResetColor();
-        }
-        static string FormatSSN (int ssnInput)
-        {
-            string ssn = ssnInput.ToString();
-            string formattedSsn = ssn.Substring(0, 4) + "-" + ssn.Substring(4, 2) + "-" + ssn.Substring(6);
-            
-            return formattedSsn;
-        }
-        static void MainMenu()
-        {
-            string[] menuOptions = { "\t1. Get all students", "\t2. Get all students in a class", "\t3. Add new staff", "\t4. Exit" };
-            int selectedOption = 0;
-
-            while (true)
-            {
-                // Visa menyn
-                Console.Clear();
-                for (int i = 0; i < menuOptions.Length; i++)
-                {
-                    if (i == selectedOption)
-                    {
-                        Console.BackgroundColor = ConsoleColor.DarkRed;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                        Console.WriteLine(menuOptions[i]);
-                        Console.ResetColor();
-                    }
-                    else
-                    {
-                        Console.WriteLine(menuOptions[i]);
-                    }
-                }
-
-
-                // Hantera input från användaren
-                var key = Console.ReadKey(true).Key;
-                if (key == ConsoleKey.UpArrow && selectedOption > 0)
-                {
-                    selectedOption--;
-                }
-                else if (key == ConsoleKey.DownArrow && selectedOption < menuOptions.Length - 1)
-                {
-                    selectedOption++;
-                }
-                else if (key == ConsoleKey.Enter)
-                {
-                    switch (selectedOption)
-                    {
-                        case 0:
-                            GetAllStudentsMenu();
-                            Console.ReadKey();
-                            break;
-
-                        case 1:
-                            GetAllClassesMenu();
-                            Console.ReadKey();
-                            break;
-
-                        case 2:
-                            AddStaffMenu();
-                            Console.ReadKey();
-                            break;
-
-                        case -1:
-                            Console.WriteLine("TEST 3");
-                            Console.ReadKey();
-                            break;
-                        default:
-                            Environment.Exit(0);
-                            break;
-                    }
-
-                }
-            }
-            }
-            static void GetAllStudentsMenu()
-            {
-                string[] menuOptions = { "\t1. Sort by first name.", "\t2. Sort by last name.","\t3. Sort by first name + descending order."
-                    ,"\t4. Sort by last name + descending order.","\t5. Exit." };
-                int selectedOption = 0;
-
-                while (true)
-                {
-                    // Visa menyn
-                    Console.Clear();
-                    for (int i = 0; i < menuOptions.Length; i++)
-                    {
-                        if (i == selectedOption)
-                        {
-                            Console.BackgroundColor = ConsoleColor.DarkRed;
-                            Console.ForegroundColor = ConsoleColor.Black;
-                            Console.WriteLine(menuOptions[i]);
-                            Console.ResetColor();
-                        }
-                        else
-                        {
-                            Console.WriteLine(menuOptions[i]);
-                        }
-                    }
-
-                    // Hantera input från användaren
-                    var key = Console.ReadKey(true).Key;
-                    if (key == ConsoleKey.UpArrow && selectedOption > 0)
-                    {
-                        selectedOption--;
-                    }
-                    else if (key == ConsoleKey.DownArrow && selectedOption < menuOptions.Length - 1)
-                    {
-                        selectedOption++;
-                    }
-                    else if (key == ConsoleKey.Enter)
-                    {
-                        switch (selectedOption)
-                        {
-                            case 0:
-                                DisplayStudents(SortByFname());
-                                PressKeyContinue();
-                                break;
-
-                            case 1:
-                                DisplayStudents(SortByLname());
-                                PressKeyContinue();
-                                break;
-
-                            case 2:
-                                DisplayStudents(SortByFnameDesc());
-                                PressKeyContinue();
-                                break;
-
-                            case 3:
-                                DisplayStudents(SortByLnameDesc());
-                                PressKeyContinue();
-                                break;
-
-                            default:
-                                MainMenu();
-                                break;
-                        }
-
-                    }
-                }
-            }
+      
         static void GetAllClassesMenu()
         {
             string[] menuOptions = { $"\t{DisplayCourses(1)}", $"\t{DisplayCourses(2)}", $"\t{DisplayCourses(3)}"
@@ -391,7 +378,6 @@ namespace EF_Labb_3
                 }
             }
         }
-
         static void RequestNewStaff()
         {
             Console.Clear();
@@ -464,59 +450,49 @@ namespace EF_Labb_3
                 }
             }
         }
-        static void AddStaffMenu()
+        static void PressKeyContinue()
         {
-            string[] menuOptions = { $"\t1. Add new Staff employee.", $"\t2. Back to Main Menu." };
-
-            int selectedOption = 0;
-
-            while (true)
-            {
-                // Visa menyn
-                Console.Clear();
-                for (int i = 0; i < menuOptions.Length; i++)
-                {
-                    if (i == selectedOption)
-                    {
-                        Console.BackgroundColor = ConsoleColor.DarkRed;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                        Console.WriteLine(menuOptions[i]);
-                        Console.ResetColor();
-                    }
-                    else
-                    {
-                        Console.WriteLine(menuOptions[i]);
-                    }
-                }
-
-                // Hantera input från användaren
-                var key = Console.ReadKey(true).Key;
-                if (key == ConsoleKey.UpArrow && selectedOption > 0)
-                {
-                    selectedOption--;
-                }
-                else if (key == ConsoleKey.DownArrow && selectedOption < menuOptions.Length - 1)
-                {
-                    selectedOption++;
-                }
-                else if (key == ConsoleKey.Enter)
-                {
-                    switch (selectedOption)
-                    {
-                        case 0:
-                            RequestNewStaff();
-                            PressKeyContinue();
-                            MainMenu();
-                            break;
-
-                        default:
-                            MainMenu();
-                            break;
-                    }
-
-                }
-            }
+            Console.WriteLine();
+            Console.BackgroundColor = ConsoleColor.DarkGray;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.WriteLine("Press any key to continue..");
+            Console.ResetColor();
+            Console.ReadKey();
         }
-      
+        static void TextRed(string yourText)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write(yourText);
+            Console.ResetColor();
+        }
+        static string FormatSSN(int ssnInput)
+        {
+            string ssn = ssnInput.ToString();
+            string formattedSsn = ssn.Substring(0, 4) + "-" + ssn.Substring(4, 2) + "-" + ssn.Substring(6);
+
+            return formattedSsn;
+        }
+        static List<Student> SortByFname()
+        {
+            var sortBy = DB.Students.OrderBy(s => s.Fname).ToList();
+            return sortBy;
+        }
+        static List<Student> SortByLname()
+        {
+            var sortBy = DB.Students.OrderBy(s => s.Lname).ToList();
+            return sortBy;
+        }
+        static List<Student> SortByFnameDesc()
+        {
+            var sortBy = DB.Students.OrderByDescending(s => s.Fname).ToList();
+            return sortBy;
+        }
+        static List<Student> SortByLnameDesc()
+        {
+            var sortBy = DB.Students.OrderByDescending(s => s.Lname).ToList();
+            return sortBy;
+        }
+
+
     }
 }
